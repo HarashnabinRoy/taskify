@@ -3,57 +3,56 @@ import {Todo} from '../model';
 import {AiFillEdit, AiFillDelete} from 'react-icons/ai';
 import {MdDone} from 'react-icons/md';
 import './styles.css';
-import TodoList from './TodoList';
+// import TodoList from './TodoList';
 import { Draggable } from 'react-beautiful-dnd';
 
 type Props = {
     index: number;
-    todo: Todo,
-    todos: Todo[],
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+    todo: Todo;
+    todos: Todo[];
+    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const SingleTodo = ({index, todo, todos, setTodos}: Props) => {
+const SingleTodo: React.FC<Props> = ({index, todo, todos, setTodos}) => {
 
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
-
-    const handleDone = (id: number) => {
-        setTodos(todos.map(
-            (todo) => todo.id===id?{...todo,isDone:!todo.isDone}:todo)
-        );
-    };
-
-    const handleDelete = (id: number) => {
-        setTodos(todos.filter((todo) => todo.id !== id))
-    };
-
-    const handleEdit = (e: React.FormEvent, id: number) => {
-        e.preventDefault();
-
-        setTodos(todos.map((todo) => (
-            todo.id===id?{...todo, todo:editTodo}: todo
-        )));
-
-        setEdit(false);
-    };
-
-    const inputRef = useRef<HTMLInputElement>(null)
-
+  
+    const inputRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
-        inputRef.current?.focus();
+      inputRef.current?.focus();
     }, [edit]);
+  
+    const handleEdit = (e: React.FormEvent, id: number) => {
+      e.preventDefault();
+      setTodos(
+        todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+      );
+      setEdit(false);
+    };
+  
+    const handleDelete = (id: number) => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    };
+  
+    const handleDone = (id: number) => {
+      setTodos(
+        todos.map((todo) =>
+          todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+        )
+      );
+    };
 
     return (
         <Draggable draggableId={todo.id.toString()} index={index}>
             {
-                (provided) => (
-                    <form 
-                        className='todos_single' 
-                        onSubmit={(e) => handleEdit(e, todo.id)} 
-                        {...provided.draggableProps} 
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
+                (provided, snapshot) => (
+                    <form
+                      onSubmit={(e) => handleEdit(e, todo.id)}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      className={`todos_single ${snapshot.isDragging ? "drag" : ""}`}
                     >
                         {
                             edit ? (
@@ -74,8 +73,8 @@ const SingleTodo = ({index, todo, todos, setTodos}: Props) => {
                             <span className='icon' onClick={() => {
                                 if (!edit && !todo.isDone) {
                                     setEdit(!edit);
-                                }
-                            }}>
+                                }}}
+                            >
                                 <AiFillEdit />
                             </span>
                             <span className='icon' onClick={ () => handleDelete(todo.id) }>
@@ -86,10 +85,7 @@ const SingleTodo = ({index, todo, todos, setTodos}: Props) => {
                             </span>
                         </div>
                     </form>
-                )
-            }
-
-            
+                )}
         </Draggable>
         
     );

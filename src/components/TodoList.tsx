@@ -5,10 +5,10 @@ import SingleTodo from './SingleTodo';
 import { Droppable } from 'react-beautiful-dnd';
 
 interface Props {
-    todos: Todo[];
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-    completedTodos: Todo[];
-    setCompletedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+    todos: Array<Todo>;
+    setTodos: React.Dispatch<React.SetStateAction<Array<Todo>>>;
+    setCompletedTodos: React.Dispatch<React.SetStateAction<Array<Todo>>>;
+    completedTodos: Array<Todo>;
 }
 const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, setCompletedTodos}) => {
     return (
@@ -22,7 +22,7 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, setComplete
                                 Active Task
                             </span>
                             {
-                                todos.map((todo, index) => (
+                                todos?.map((todo, index) => (
                                     <SingleTodo 
                                         index={index}
                                         todo={todo}
@@ -38,16 +38,15 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, setComplete
                 }
             </Droppable>
             
-
             <Droppable droppableId='TodosRemove'>
                 {
                     (provided, snapshot) => (
-                        <div className={`todos remove ${snapshot.isDraggingOver ? "dragcomplete" : ""}`} ref={provided.innerRef} {...provided.droppableProps}>
+                        <div className={`todos remove ${snapshot.isDraggingOver ? "dragcomplete" : "remove"}`} ref={provided.innerRef} {...provided.droppableProps}>
                             <span className='todos_heading'>
                                     Completed Task
                             </span>
                             {
-                                completedTodos.map((todo,index) => (
+                                completedTodos?.map((todo,index) => (
                                     <SingleTodo 
                                         index={index}
                                         todo={todo}
@@ -63,8 +62,8 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, setComplete
                 }
             </Droppable>
         </div>
-    )
-}
+    );
+};
 
 //-------------- OLD UI --------------
 // const TodoList: React.FC<Props> = ({todos, setTodos}: Props) => {
