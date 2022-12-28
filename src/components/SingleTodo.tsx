@@ -92,7 +92,7 @@ const SingleTodo = ({index, todo, todos, setTodos}: Props) => {
             
         </Draggable>
         
-    )
-}
+    );
+};
 
 export default SingleTodo
